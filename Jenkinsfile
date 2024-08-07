@@ -1,12 +1,10 @@
 pipeline {
     agent any
        environment {
-           DOCKERHUB_CREDENTIALS = credentials('docker-hub-credentials')
+           DOCKER_CREDENTIALS = credentials('docker-hub-credentials')
            IMAGE_TAG = "dafik15/aws-inventory-project-app:${BUILD_NUMBER}"
            DOCKER_HUB_USERNAME = 'dafik15' 
            // SONAR_URL = "http://65.2.71.169:9000/"
-        
-
        }
     stages {
         stage('Checkout') {
@@ -28,13 +26,13 @@ pipeline {
         //         }
         //     }
         // }
-        // stage('Build Docker Image') {
-        //     steps {
-        //         script {
-        //             bat "docker build -t ${IMAGE_TAG} ."
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    bat "docker build -t ${IMAGE_TAG} ."
+                }
+            }
+        }
         // stage('Trivy Scan') {
         //     steps {
         //         script {
@@ -51,27 +49,27 @@ pipeline {
         //         }
         //     }
         // }
-        // stage('Push to Docker Hub') {
-        //     steps {
-        //         script {
-        //             bat "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password-stdin"
-        //             bat "docker push ${IMAGE_TAG}"
-        //             bat "docker rmi ${IMAGE_TAG}"
-        //         }
-        //     }
-        // }
+        //
         stage('Docker Login') {
             steps {
-                withCredentials([string(credentialsId: 'docker-hub-token', variable: 'DOCKER_HUB_TOKEN')]) {
-                    bat "docker build -t ${IMAGE_TAG} ."
-                    bat 'echo $DOCKER_HUB_TOKEN | docker login -u $DOCKER_HUB_USERNAME --password-stdin'
-                    // echo "dckr_pat_yIc3f9L7j3j2APOlHKXTq20NQvA" | docker login -u "dafik15" --password-stdin
-                    bat "docker push ${IMAGE_TAG}"
+                script {
+                    bat """
+                    echo %DOCKER_CREDENTIALS_USR%
+                    echo %DOCKER_CREDENTIALS_PSW%
+                    docker login -u %DOCKER_CREDENTIALS_USR% -p %DOCKER_CREDENTIALS_PSW% https://index.docker.io/v1/
+                    """
                 }
             }
         }
-
-    
+         stage('Push to Docker Hub') {
+            steps {
+                script {
+        //             bat "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password-stdin"
+                    bat "docker push ${IMAGE_TAG}"
+        //             bat "docker rmi ${IMAGE_TAG}"
+                }
+            }
+        }
     }
    // post {
        // always {
