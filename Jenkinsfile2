@@ -65,9 +65,9 @@ pipeline {
             steps {
                 script {
                     bat "echo %DOCKERHUB_CREDENTIALS_USR%"
-                    bat "echo %DOCKERHUB_CREDENTIALS_PSW%"
+                   // bat "echo %DOCKERHUB_CREDENTIALS_PSW%"
                    // bat "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password-stdin https://index.docker.io/v1/"
-                    bat "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin https://index.docker.io/v1/"
+                    bat "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin "https://registry-1.docker.io/v2/"
                    // bat "docker push ${IMAGE_TAG}
                     //  bat "docker rmi ${IMAGE_TAG}
                 }
