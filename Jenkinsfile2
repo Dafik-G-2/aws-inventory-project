@@ -4,6 +4,7 @@ pipeline {
            DOCKERHUB_CREDENTIALS = credentials('docker-hub-credentials')
            IMAGE_TAG = "dafik15/aws-inventory-project-app:${BUILD_NUMBER}"
            // DOCKER_HUB_USERNAME = 'dafik15' 
+            DOCKER_PASSWORD = "Dafik@1512"
            // SONAR_URL = "http://65.2.71.169:9000/"
        }
     stages {
@@ -64,7 +65,8 @@ pipeline {
          stage('Docker login') {
             steps {
                 script {
-                    bat "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password-stdin https://index.docker.io/v1/"
+                   // bat "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password-stdin https://index.docker.io/v1/"
+                    bat "echo $DOCKER_PASSWORD | docker login --username dafik15 --password-stdin https://index.docker.io/v1/"
                    // bat "docker push ${IMAGE_TAG}
                     //  bat "docker rmi ${IMAGE_TAG}
                 }
