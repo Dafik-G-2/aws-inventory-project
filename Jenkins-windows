@@ -4,7 +4,7 @@ pipeline {
            DOCKER_CREDENTIALS = credentials('docker-hub-credentials')
            IMAGE_TAG = "dafik15/aws-inventory-project-app:${BUILD_NUMBER}"
            DOCKER_HUB_USERNAME = 'dafik15' 
-           file = "file=trivy-report.json"
+           file = "trivy-report.json"
            pattern = '"Severity": "HIGH"'
            // SONAR_URL = "http://65.2.71.169:9000/"
        }
