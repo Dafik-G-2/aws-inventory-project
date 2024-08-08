@@ -41,7 +41,7 @@ pipeline {
                     
                     // Optionally, you can parse the JSON report and fail the build on high-severity vulnerabilities
                     bat """
-                    if grep -q '"Severity": "HIGH"' trivy-report.json; then
+                    if grep '"Severity": "HIGH"' trivy-report.json; then
                         echo "High severity vulnerabilities found!"
                         exit 1
                     fi
