@@ -50,10 +50,6 @@ pipeline {
                         ) else (
                             echo No high severity vulnerabilities found.
                             )
-                   // if findstr -q '"Severity": "HIGH"' trivy-report.json; then
-                     //   echo "High severity vulnerabilities found!"
-                      //  exit 1
-                    //fi
                     """
             }
             }    
