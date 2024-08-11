@@ -5,4 +5,4 @@ metadata:
 spec:
   containers:
     - name: my-container-1
-      image: nginx45
+      image: dafik15/aws-inventory-project-app:19
