@@ -89,14 +89,15 @@ pipeline {
                                 rm -rf ${GIT_REPO_NAME}
                                 git clone https://github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git
                                 cd ${GIT_REPO_NAME}
-                                # Update the deployment file
-                                sed -i '' 's|image: dafik15/aws-inventory-project-app:*|image: dafik15/aws-inventory-project-app:${BUILD_NUMBER}|g' K8S/deployment.yml
+                                // Update the deployment file
+                              //  sed -i '' 's|image: dafik15/aws-inventory-project-app:*|image: dafik15/aws-inventory-project-app:${BUILD_NUMBER}|g' K8S/deployment.yml
+                                (Get-Content K8S/deployment.yml) -replace 'image: dafik15/aws-inventory-project-app:.*', "image: dafik15/aws-inventory-project-app:${env.BUILD_NUMBER}" | Set-Content K8S/deployment.yml
                                 git config user.email "g.dafik@gmail.com"
                                 git config user.name "Dafik-G-2"
                                 git add K8S/deployment.yml
                                 git commit -m "Update deployment file with image version ${BUILD_NUMBER}"
-                                # git push https://${GITHUB_TOKEN}:x-oauth-basic@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                                # git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                             //   # git push https://${GITHUB_TOKEN}:x-oauth-basic@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                             //   # git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
                                 ls -lrt
                                 git push origin main
                             '''
