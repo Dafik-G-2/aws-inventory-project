@@ -2,7 +2,9 @@ pipeline {
     agent any
        environment {
            DOCKERHUB_CREDENTIALS = credentials('docker-hub-credentials')
-           IMAGE_TAG = "dafik15/aws-inventory-project-app:${BUILD_NUMBER}"
+           IMAGE_TAG = "dafik15/aws-inventory-project-app-14-aug:${BUILD_NUMBER}"
+           GIT_REPO_NAME = "aws-inventory-k8s"
+           GIT_USER_NAME = "Dafik-G-2"
            // DOCKER_HUB_USERNAME = 'dafik15' 
            // SONAR_URL = "http://65.2.71.169:9000/"
        }
@@ -61,6 +63,37 @@ pipeline {
                     sh "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login --username ${DOCKERHUB_CREDENTIALS_USR} --password-stdin"
                     sh "docker push ${IMAGE_TAG}"
                     sh "docker rmi ${IMAGE_TAG}"
+                }
+            }
+        }
+        stage('Update Deployment File') {
+            steps {
+                withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                    script {
+                        try {
+                            sh '''
+                                  set -e
+                                cd ~
+                                pwd
+                                rm -rf ${GIT_REPO_NAME}
+                                git clone https://github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git
+                                cd ${GIT_REPO_NAME}
+                                # Update the deployment file
+                                sed -i '' 's|image: dafik15/aws-inventory-project-app:.*|image: dafik15/aws-inventory-project-app:${BUILD_NUMBER}|g' K8S/deployment.yml
+                                git config user.email "g.dafik15@gmail.com"
+                                git config user.name "Dafik-G-2"
+                                git add K8S/deployment.yml
+                                git commit -m "Update deployment file with image version ${BUILD_NUMBER}"
+                                # git push https://${GITHUB_TOKEN}:x-oauth-basic@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                                # git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                                ls -lrt
+                                git push origin main
+                            '''
+                        } catch (Exception e) {
+                            echo "Error occurred during deployment file update: ${e.getMessage()}"
+                            throw e
+                        }
+                    }
                 }
             }
         }
