@@ -85,7 +85,8 @@ stage('Update Deployment File') {
                         git add K8S/deployment.yml
                         git commit -m "Update deployment file with image version ${BUILD_NUMBER}"
                         # Ensure the remote name and branch are correct
-                        git push origin main
+                        # git push origin main
+                        git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
                     '''
                 } catch (Exception e) {
                     echo "Error occurred during deployment file update: ${e.getMessage()}"
